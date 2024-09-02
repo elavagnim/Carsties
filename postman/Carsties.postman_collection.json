@@ -38,6 +38,145 @@
 				"url": "{{auctionApi}}/api/auctions"
 			},
 			"response": []
+		},
+		{
+			"name": "Get Ferrari Spider",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test('Status code is 200', function() {",
+							"    pm.response.to.have.status(200);",
+							"})",
+							"",
+							"pm.test('Item is Ferrari Spider', function() {",
+							"    pm.expect(jsonData.make).to.eq('Ferrari');",
+							"    pm.expect(jsonData.model).to.eq('Spider');",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{auctionApi}}/api/auctions/dc1e4071-d19d-459b-b848-b5c3cd3d151f"
+			},
+			"response": []
+		},
+		{
+			"name": "Create new Auction",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Response body contains expected properties\", function () {",
+							"    pm.expect(jsonData).to.haveOwnProperty('id');",
+							"    pm.expect(jsonData).to.haveOwnProperty('make');",
+							"    pm.expect(jsonData).to.haveOwnProperty('model');",
+							"    pm.expect(jsonData).to.haveOwnProperty('year');",
+							"    pm.expect(jsonData).to.haveOwnProperty('imageUrl');",
+							"    pm.expect(jsonData).to.haveOwnProperty('seller');",
+							"    pm.expect(jsonData.status).to.eq('Live');",
+							"});",
+							"",
+							"pm.collectionVariables.set(\"createdItemId\", jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var date = new Date()",
+							"date.setDate(date.getDate() + 14);",
+							"var dateString = date.toISOString();",
+							"pm.variables.set(\"dateString\", dateString);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"make\": \"Ford\",\n  \"model\": \"Escort\",\n  \"year\": \"2021\",\n  \"mileage\": \"10000\",\n  \"imageUrl\": \"https://cdn.pixabay.com/photo/2018/02/04/15/45/car-3130111_960_720.jpg\",\n  \"reservePrice\": 100,\n  \"auctionEnd\": \"{{dateString}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{auctionApi}}/api/auctions"
+			},
+			"response": []
+		},
+		{
+			"name": "Update the created auction",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function() {",
+							"    pm.response.to.have.status(200);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"make\": \"Ford Updated\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{auctionApi}}/api/auctions/{{createdItemId}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Auction Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function() {",
+							"    pm.response.to.have.status(200);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": "{{auctionApi}}/api/auctions/{{createdItemId}}"
+			},
+			"response": []
 		}
 	],
 	"event": [
@@ -65,6 +204,10 @@
 			"key": "auctionApi",
 			"value": "http://localhost:7001",
 			"type": "string"
+		},
+		{
+			"key": "createdItemId",
+			"value": "c9ea0408-99b0-465a-98dc-3958ae39dc25"
 		}
 	]
 }
