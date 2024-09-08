@@ -7,176 +7,398 @@
 	},
 	"item": [
 		{
-			"name": "Get all auctions",
-			"event": [
+			"name": "auctions",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var jsonData = pm.response.json();",
-							"",
-							"pm.test('Status code is 200', function() {",
-							"    pm.response.to.have.status(200);",
-							"})",
-							"",
-							"pm.test('Should be 10 items', function() {",
-							"    pm.expect(jsonData.length).to.equal(10);",
-							"})",
-							"",
-							"pm.test('First item should be Audi R8', function() {",
-							"    pm.expect(jsonData[0].make).to.eq('Audi');",
-							"    pm.expect(jsonData[0].model).to.eq('R8');",
-							"})"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": "{{auctionApi}}/api/auctions"
-			},
-			"response": []
-		},
-		{
-			"name": "Get Ferrari Spider",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var jsonData = pm.response.json();",
-							"",
-							"pm.test('Status code is 200', function() {",
-							"    pm.response.to.have.status(200);",
-							"})",
-							"",
-							"pm.test('Item is Ferrari Spider', function() {",
-							"    pm.expect(jsonData.make).to.eq('Ferrari');",
-							"    pm.expect(jsonData.model).to.eq('Spider');",
-							"})"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": "{{auctionApi}}/api/auctions/dc1e4071-d19d-459b-b848-b5c3cd3d151f"
-			},
-			"response": []
-		},
-		{
-			"name": "Create new Auction",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var jsonData = pm.response.json();",
-							"",
-							"pm.test(\"Status code is 201\", function () {",
-							"    pm.response.to.have.status(201);",
-							"});",
-							"",
-							"pm.test(\"Response body contains expected properties\", function () {",
-							"    pm.expect(jsonData).to.haveOwnProperty('id');",
-							"    pm.expect(jsonData).to.haveOwnProperty('make');",
-							"    pm.expect(jsonData).to.haveOwnProperty('model');",
-							"    pm.expect(jsonData).to.haveOwnProperty('year');",
-							"    pm.expect(jsonData).to.haveOwnProperty('imageUrl');",
-							"    pm.expect(jsonData).to.haveOwnProperty('seller');",
-							"    pm.expect(jsonData.status).to.eq('Live');",
-							"});",
-							"",
-							"pm.collectionVariables.set(\"createdItemId\", jsonData.id);"
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"var date = new Date()",
-							"date.setDate(date.getDate() + 14);",
-							"var dateString = date.toISOString();",
-							"pm.variables.set(\"dateString\", dateString);"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"make\": \"Ford\",\n  \"model\": \"Escort\",\n  \"year\": \"2021\",\n  \"mileage\": \"10000\",\n  \"imageUrl\": \"https://cdn.pixabay.com/photo/2018/02/04/15/45/car-3130111_960_720.jpg\",\n  \"reservePrice\": 100,\n  \"auctionEnd\": \"{{dateString}}\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+					"name": "Get Ferrari Spider",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test('Status code is 200', function() {",
+									"    pm.response.to.have.status(200);",
+									"})",
+									"",
+									"pm.test('Item is Ferrari Spider', function() {",
+									"    pm.expect(jsonData.make).to.eq('Ferrari');",
+									"    pm.expect(jsonData.model).to.eq('Spider');",
+									"})"
+								],
+								"type": "text/javascript"
+							}
 						}
-					}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{auctionApi}}/api/auctions/dc1e4071-d19d-459b-b848-b5c3cd3d151f"
+					},
+					"response": []
 				},
-				"url": "{{auctionApi}}/api/auctions"
-			},
-			"response": []
-		},
-		{
-			"name": "Update the created auction",
-			"event": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test('Status code is 200', function() {",
-							"    pm.response.to.have.status(200);",
-							"})"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"make\": \"Ford Updated\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+					"name": "Create new Auction",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Response body contains expected properties\", function () {",
+									"    pm.expect(jsonData).to.haveOwnProperty('id');",
+									"    pm.expect(jsonData).to.haveOwnProperty('make');",
+									"    pm.expect(jsonData).to.haveOwnProperty('model');",
+									"    pm.expect(jsonData).to.haveOwnProperty('year');",
+									"    pm.expect(jsonData).to.haveOwnProperty('imageUrl');",
+									"    pm.expect(jsonData).to.haveOwnProperty('seller');",
+									"    pm.expect(jsonData.status).to.eq('Live');",
+									"});",
+									"",
+									"pm.collectionVariables.set(\"createdItemId\", jsonData.id);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var date = new Date()",
+									"date.setDate(date.getDate() + 14);",
+									"var dateString = date.toISOString();",
+									"pm.variables.set(\"dateString\", dateString);"
+								],
+								"type": "text/javascript"
+							}
 						}
-					}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"make\": \"Ford\",\n  \"model\": \"Escort\",\n  \"year\": \"2021\",\n  \"mileage\": \"10000\",\n  \"imageUrl\": \"https://cdn.pixabay.com/photo/2018/02/04/15/45/car-3130111_960_720.jpg\",\n  \"reservePrice\": 100,\n  \"auctionEnd\": \"{{dateString}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{auctionApi}}/api/auctions"
+					},
+					"response": []
 				},
-				"url": "{{auctionApi}}/api/auctions/{{createdItemId}}"
-			},
-			"response": []
+				{
+					"name": "Update the created auction",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function() {",
+									"    pm.response.to.have.status(200);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"make\": \"Ford Updated\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{auctionApi}}/api/auctions/{{createdItemId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Auction",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function() {",
+									"    pm.response.to.have.status(200);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{auctionApi}}/api/auctions/{{createdItemId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all auctions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test('Status code is 200', function() {",
+									"    pm.response.to.have.status(200);",
+									"})",
+									"",
+									"pm.test('Should be 10 items', function() {",
+									"    pm.expect(jsonData.length).to.equal(10);",
+									"})",
+									"",
+									"pm.test('First item should be Audi R8', function() {",
+									"    pm.expect(jsonData[0].make).to.eq('Audi');",
+									"    pm.expect(jsonData[0].model).to.eq('R8');",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{auctionApi}}/api/auctions"
+					},
+					"response": []
+				}
+			]
 		},
 		{
-			"name": "Delete Auction Copy",
-			"event": [
+			"name": "search",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test('Status code is 200', function() {",
-							"    pm.response.to.have.status(200);",
-							"})"
-						],
-						"type": "text/javascript"
-					}
+					"name": "Get all items",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test('Status code is 200', function() {",
+									"    pm.response.to.have.status(200);",
+									"})",
+									"",
+									"pm.test('First item is Audi', function() {",
+									"    pm.expect(jsonData.results[0].make).to.eq('Audi');",
+									"})",
+									"",
+									"pm.test('Result includes results, pagecount and totalcount properties', function() {",
+									"    pm.expect(jsonData).to.haveOwnProperty('results');",
+									"    pm.expect(jsonData).to.haveOwnProperty('pageCount');",
+									"    pm.expect(jsonData).to.haveOwnProperty('totalCount');",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{searchApi}}/api/search"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all cars with make of Ford",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test('Status code is 200', function() {",
+									"    pm.response.to.have.status(200);",
+									"})",
+									"",
+									"pm.test('First item is Ford', function() {",
+									"    pm.expect(jsonData.results[0].make).to.eq('Ford');",
+									"})",
+									"",
+									"pm.test('Result includes results, pagecount and totalcount properties', function() {",
+									"    pm.expect(jsonData).to.haveOwnProperty('results');",
+									"    pm.expect(jsonData).to.haveOwnProperty('pageCount');",
+									"    pm.expect(jsonData).to.haveOwnProperty('totalCount');",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{searchApi}}/api/search?searchTerm=ford",
+							"host": [
+								"{{searchApi}}"
+							],
+							"path": [
+								"api",
+								"search"
+							],
+							"query": [
+								{
+									"key": "searchTerm",
+									"value": "ford"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all items With no params",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test('Status code is 200', function() {",
+									"    pm.response.to.have.status(200);",
+									"})",
+									"",
+									"pm.test('Result includes results, pagecount and totalcount properties', function() {",
+									"    pm.expect(jsonData).to.haveOwnProperty('results');",
+									"    pm.expect(jsonData).to.haveOwnProperty('pageCount');",
+									"    pm.expect(jsonData).to.haveOwnProperty('totalCount');",
+									"})",
+									"",
+									"pm.test('pagecount is 3 and totalCount is 9', function() {",
+									"    pm.expect(jsonData.pageCount).to.eq(3);",
+									"    pm.expect(jsonData.totalCount).to.eq(9);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{searchApi}}/api/search"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all items With PageSize and PageNumber",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test('Status code is 200', function() {",
+									"    pm.response.to.have.status(200);",
+									"})",
+									"",
+									"pm.test('Result includes results, pagecount and totalcount properties', function() {",
+									"    pm.expect(jsonData).to.haveOwnProperty('results');",
+									"    pm.expect(jsonData).to.haveOwnProperty('pageCount');",
+									"    pm.expect(jsonData).to.haveOwnProperty('totalCount');",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{searchApi}}/api/search?pageNumber=2&pageSize=2",
+							"host": [
+								"{{searchApi}}"
+							],
+							"path": [
+								"api",
+								"search"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "2"
+								},
+								{
+									"key": "pageSize",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all items With Bob as Seller",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test('Status code is 200', function() {",
+									"    pm.response.to.have.status(200);",
+									"})",
+									"",
+									"pm.test('Result includes results, pagecount and totalcount properties', function() {",
+									"    pm.expect(jsonData).to.haveOwnProperty('results');",
+									"    pm.expect(jsonData).to.haveOwnProperty('pageCount');",
+									"    pm.expect(jsonData).to.haveOwnProperty('totalCount');",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{searchApi}}/api/search?seller=bob",
+							"host": [
+								"{{searchApi}}"
+							],
+							"path": [
+								"api",
+								"search"
+							],
+							"query": [
+								{
+									"key": "seller",
+									"value": "bob"
+								}
+							]
+						}
+					},
+					"response": []
 				}
-			],
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": "{{auctionApi}}/api/auctions/{{createdItemId}}"
-			},
-			"response": []
+			]
 		}
 	],
 	"event": [
@@ -208,6 +430,11 @@
 		{
 			"key": "createdItemId",
 			"value": "c9ea0408-99b0-465a-98dc-3958ae39dc25"
+		},
+		{
+			"key": "searchApi",
+			"value": "http://localhost:7002",
+			"type": "string"
 		}
 	]
 }
