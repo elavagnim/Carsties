@@ -7,11 +7,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AuctionService.IntegrationTests;
 
-public class AuctionControllerTests : IClassFixture<CustomWebAppFactory>, IAsyncLifetime
+[Collection("Shared Collection")]
+public class AuctionControllerTests : IAsyncLifetime
 {
     private readonly CustomWebAppFactory _factory;
     private readonly HttpClient _httpClient;
-    private string GT_ID = "afbee524-5972-4075-8800-7d1f9d7b0a0c";
+    private readonly string GT_ID = "afbee524-5972-4075-8800-7d1f9d7b0a0c";
     
     public AuctionControllerTests(CustomWebAppFactory factory)
     {
@@ -27,21 +28,21 @@ public class AuctionControllerTests : IClassFixture<CustomWebAppFactory>, IAsync
     }
     
     [Fact]
-    public async Task GetAuctionById_WithValidIdShouldReturn404()
+     public async Task GetAuctionById_WithValidId_ShouldReturnAuction()
     {
         var response = await _httpClient.GetFromJsonAsync<AuctionDto>($"api/auctions/{GT_ID}");
         Assert.Equal("GT", response.Model);
     }
     
     [Fact]
-    public async Task GetAuctionById_WithValidIdShouldReturn400()
+    public async Task GetAuctionById_WithInvalidId_ShouldReturn404()
     {
         var response = await _httpClient.GetAsync($"api/auctions/{Guid.NewGuid()}");
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
     
     [Fact]
-    public async Task GetAuctionById_WithInvalidShouldReturnAuction()
+    public async Task GetAuctionById_WithInvalidGuid_ShouldReturn400()
     {
          var response = await _httpClient.GetAsync($"api/auctions/notguid");
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -101,7 +102,7 @@ public class AuctionControllerTests : IClassFixture<CustomWebAppFactory>, IAsync
         return Task.CompletedTask;
     }
 
-    private CreateAuctionDto GetAuctionForCreate()
+    private static CreateAuctionDto GetAuctionForCreate()
     {
         return new CreateAuctionDto 
         {
