@@ -6,9 +6,11 @@ name: CI
 on:
   push:
     branches: [ "main" ]
+    paths: ['AuctionService/**']
   pull_request:
     branches: [ "main" ]
-
+    paths: ['AuctionService/**']
+    
 jobs:
   build:
 
