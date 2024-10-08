@@ -6,10 +6,14 @@ name: CI
 on:
   push:
     branches: [ "main" ]
-    paths: ['AuctionService/**']
+    paths:
+      - 'src/AuctionService/**'
+      - 'tests/AuctionService.IntegrationTests/**'
   pull_request:
     branches: [ "main" ]
-    paths: ['AuctionService/**']
+    paths:
+      - 'src/AuctionService/**'
+      - 'tests/AuctionService.IntegrationTests/**'    
     
 jobs:
   build:
