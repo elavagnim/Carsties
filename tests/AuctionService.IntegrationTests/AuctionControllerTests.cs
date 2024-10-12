@@ -1,4 +1,3 @@
-
 using System.Net;
 using System.Net.Http.Json;
 using AuctionService.Data;
@@ -13,7 +12,7 @@ public class AuctionControllerTests : IAsyncLifetime
     private readonly CustomWebAppFactory _factory;
     private readonly HttpClient _httpClient;
     private readonly string GT_ID = "afbee524-5972-4075-8800-7d1f9d7b0a0c";
-    
+
     public AuctionControllerTests(CustomWebAppFactory factory)
     {
         _factory = factory;
@@ -26,28 +25,28 @@ public class AuctionControllerTests : IAsyncLifetime
         var response = await _httpClient.GetFromJsonAsync<List<AuctionDto>>("api/auctions");
         Assert.Equal(3, response.Count);
     }
-    
+
     [Fact]
-     public async Task GetAuctionById_WithValidId_ShouldReturnAuction()
+    public async Task GetAuctionById_WithValidId_ShouldReturnAuction()
     {
         var response = await _httpClient.GetFromJsonAsync<AuctionDto>($"api/auctions/{GT_ID}");
         Assert.Equal("GT", response.Model);
     }
-    
+
     [Fact]
     public async Task GetAuctionById_WithInvalidId_ShouldReturn404()
     {
         var response = await _httpClient.GetAsync($"api/auctions/{Guid.NewGuid()}");
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
-    
+
     [Fact]
     public async Task GetAuctionById_WithInvalidGuid_ShouldReturn400()
     {
-         var response = await _httpClient.GetAsync($"api/auctions/notguid");
+        var response = await _httpClient.GetAsync($"api/auctions/notguid");
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
-    
+
     [Fact]
     public async Task CreateAuction_ShouldReturn201()
     {
@@ -60,7 +59,7 @@ public class AuctionControllerTests : IAsyncLifetime
         var createdAtAction = await response.Content.ReadFromJsonAsync<AuctionDto>();
         Assert.Equal("test", createdAtAction.Seller);
     }
-    
+
     [Fact]
     public async Task CreateAuction_WithInvalidCreatedAuctionDto_ShouldReturn400()
     {
@@ -75,23 +74,47 @@ public class AuctionControllerTests : IAsyncLifetime
     [Fact]
     public async Task UpdateAuction_WithUpdatedDto_ShouldReturn200()
     {
-        var updatedAuction = new UpdateAuctionDto {Make = "updated"};
-       
+        var updatedAuction = new UpdateAuctionDto { Make = "updated" };
+
         var response = await _httpClient.PutAsJsonAsync($"api/auctions/{GT_ID}", updatedAuction);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
-        [Fact]
+    [Fact]
     public async Task UpdateAuction_WithInvalidUpdatedDto_ShouldReturn200()
     {
-        var updatedAuction = new UpdateAuctionDto {Make = null};
-       
+        var updatedAuction = new UpdateAuctionDto { Make = null };
+
         var response = await _httpClient.PutAsJsonAsync($"api/auctions/{GT_ID}", updatedAuction);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
-    
+
+    [Fact]
+    public async Task RemoveAuction_WithValidId_ShouldReturn200()
+    {
+        var response = await _httpClient.DeleteAsync($"api/auctions/{GT_ID}");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task RemoveAuction_WithInvalidId_ShouldReturn400()
+    {
+        var response = await _httpClient.DeleteAsync("api/auctions/notguid");
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task RemoveAuction_WithNonExistingId_ShouldReturn404()
+    {
+        var response = await _httpClient.DeleteAsync($"api/auctions/{Guid.NewGuid()}");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
     public Task InitializeAsync() => Task.CompletedTask;
 
     public Task DisposeAsync()
@@ -104,13 +127,13 @@ public class AuctionControllerTests : IAsyncLifetime
 
     private static CreateAuctionDto GetAuctionForCreate()
     {
-        return new CreateAuctionDto 
+        return new CreateAuctionDto
         {
             Make = "test",
             Model = "testModel",
             ImageUrl = "test",
             Color = "test",
-            Mileage  = 10,
+            Mileage = 10,
             Year = 2010,
             ReservePrice = 10
         };
